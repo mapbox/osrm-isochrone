@@ -25,8 +25,13 @@
     "tape": "^3.0.3"
   },
   "dependencies": {
+    "osrm": "^4.4.0-final",
+    "turf-destination": "0.0.5",
+    "turf-extent": "^0.1.4",
+    "turf-featurecollection": "^0.1.0",
     "turf-grid": "^0.1.0",
     "turf-isolines": "^0.1.1",
+    "turf-point": "^0.1.6",
     "turf-quantile": "^0.1.1"
   }
 }
