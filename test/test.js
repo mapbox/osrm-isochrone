@@ -1,11 +1,12 @@
 var test = require('tape'),
     area = require('geojson-area')
-    isochrone = require('./');
+    isochrone = require('../');
 
 test('osrm-isochrone', function(t) {
     t.plan(7);
     var resolution = 10;
-    var time 1000;
+    var time = 10;
+    var network = '../dc.osrm'
     var locations = [
         [-75.16416549682616,39.94804262581411],
         [-73.95506858825684,40.714411227628915],
@@ -16,8 +17,9 @@ test('osrm-isochrone', function(t) {
         [-118.3612060546875,33.98436372829188]
     ];
 
-    locations.forEach(function(location){
-        var drivetime = isochrone(location);
-        t.ok(drivetime);
+    locations.forEach(function(location) {
+        var drivetime = isochrone(location, time, resolution, network, function(err, res) {
+            t.ok(drivetime);
+        });
     });
 });

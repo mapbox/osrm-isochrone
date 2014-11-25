@@ -4,9 +4,10 @@ var isolines = require('turf-isolines'),
     point = require('turf-point'),
     extent = require('turf-extent'),
     featureCollection = require('turf-featurecollection'),
-    osrm = require('osrm');
+    OSRM = require('osrm');
 
-module.exports = function (center, time, resolution, done) {
+module.exports = function (center, time, resolution, network, done) {
+    var osrm = new OSRM(network);
     // compute bbox
     // bbox should go out 1.4 miles in each direction for each minute
     // this will account for a driver going a bit above the max safe speed
@@ -17,10 +18,10 @@ module.exports = function (center, time, resolution, done) {
     spokes.features.push(destination(centerPt, miles, -180, 'miles'));
     spokes.features.push(destination(centerPt, miles, 90, 'miles'));
     spokes.features.push(destination(centerPt, miles, -90, 'miles'));
-    var bbox = extent(spokes)
+    var bbox = extent(spokes);
 
     //compute destination grid
-    var grid = T.grid(bbox, 30);
+    var targets = grid(bbox, 30);
     var routes = featureCollection([]);
     var destinations = featureCollection([]);
     var i = 0;
@@ -28,14 +29,14 @@ module.exports = function (center, time, resolution, done) {
     getNext(i);
 
     function getNext(i){
-      if(i < grid.features.length) {
+      if(i < targets.features.length) {
         var query = {
           coordinates: [
             [
               center[1], center[0]
             ],
             [
-              grid.features[i].geometry.coordinates[1], grid.features[i].geometry.coordinates[0]
+              targets.features[i].geometry.coordinates[1], targets.features[i].geometry.coordinates[0]
             ]
           ]
         };
@@ -44,7 +45,6 @@ module.exports = function (center, time, resolution, done) {
           else if (!res || !res.route_summary.total_time || !res.route_summary.total_time) {
             console.log('RES missing data: ', res)
           } else {
-            console.log(res.route_summary.total_time)
             destinations.features.push({
               type: 'Feature',
               properties: {
