@@ -25,7 +25,7 @@ module.exports = function (center, time, resolution, done) {
     var destinations = featureCollection([]);
     var i = 0;
 
-    getNext(i)
+    getNext(i);
 
     function getNext(i){
       if(i < grid.features.length) {
@@ -58,7 +58,7 @@ module.exports = function (center, time, resolution, done) {
             })
             routes.features.push(decode(res));
           }
-          i++
+          i++;
           getNext(i);
         })
       } else {
