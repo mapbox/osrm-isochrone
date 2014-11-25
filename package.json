@@ -1,0 +1,32 @@
+{
+  "name": "osrm-isochrone",
+  "version": "1.0.0",
+  "description": "creates drivetime isochrones from osrm routes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/morganherlocker/osrm-isochrone.git"
+  },
+  "keywords": [
+    "drivetime",
+    "polygon",
+    "osrm"
+  ],
+  "author": "morganherlocker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morganherlocker/osrm-isochrone/issues"
+  },
+  "homepage": "https://github.com/morganherlocker/osrm-isochrone",
+  "devDependencies": {
+    "tape": "^3.0.3"
+  },
+  "dependencies": {
+    "turf-grid": "^0.1.0",
+    "turf-isolines": "^0.1.1",
+    "turf-quantile": "^0.1.1"
+  }
+}
