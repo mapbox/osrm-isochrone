@@ -43,7 +43,7 @@ module.exports = function (center, time, resolution, network, done) {
         osrm.route(query, function(err, res){
           if(err) console.log(err)
           else if (!res || !res.route_summary.total_time || !res.route_summary.total_time) {
-            console.log('RES missing data: ', res)
+            return done(new Error('No data found for location: %s', center));
           } else {
             destinations.features.push({
               type: 'Feature',
