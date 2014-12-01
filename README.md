@@ -20,3 +20,20 @@ An osrm file is required for routing. This can be generated using included binar
 ./node_modules/osrm-isochrone/osrm/lib/binding/osrm-extract mydata.osm -p ./node_modules/osrm-isochrone/osrm/test/data/car.lua
 ./node_modules/osrm-isochrone/osrm/lib/binding/osrm-prepare mydata.osrm -p ./node_modules/osrm-isochrone/osrm/test/data/car.lua
 ```
+
+##Usage
+
+```js
+var isochrone = require('osrm-isochrone');
+
+var resolution = 25; // sample resolution
+var time = 300; // 300 second drivetime (5 minutes)
+var network = './dc.osrm' // prebuild dc osrm network file
+var location = [-77.02926635742188,38.90011780426885]; // center point
+
+isochrone(location, time, resolution, network, function(err, drivetime) {
+  if(err) throw err;
+  // a geojson linestring
+  console.log(JSON.stringify(drivetime))
+});
+```
