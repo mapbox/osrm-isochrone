@@ -18,5 +18,5 @@ An osrm file is required for routing. This can be generated using included binar
 ```sh
 #first download an osm file containing the area you need
 ./node_modules/osrm-isochrone/osrm/lib/binding/osrm-extract mydata.osm -p ./node_modules/osrm-isochrone/osrm/test/data/car.lua
-./node_modules/osrm-isochrone/osrm/lib/binding/osrm-prepare mydata.osm -p ./node_modules/osrm-isochrone/osrm/test/data/car.lua
+./node_modules/osrm-isochrone/osrm/lib/binding/osrm-prepare mydata.osrm -p ./node_modules/osrm-isochrone/osrm/test/data/car.lua
 ```
