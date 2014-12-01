@@ -14,7 +14,7 @@ module.exports = function (center, time, resolution, network, done) {
     // this will account for a driver going a bit above the max safe speed
     var centerPt = point(center[0], center[1]);
     var spokes = featureCollection([])
-    var miles = time * 1.4;
+    var miles = (time/60) * 1.1;
     spokes.features.push(destination(centerPt, miles, 180, 'miles'));
     spokes.features.push(destination(centerPt, miles, 0, 'miles'));
     spokes.features.push(destination(centerPt, miles, 90, 'miles'));
@@ -54,8 +54,8 @@ module.exports = function (center, time, resolution, network, done) {
                     destinations.features.push({
                         type: 'Feature',
                         properties: {
-                            eta: 500,
-                            dist: 500
+                            eta: time+100
+                            //,dist: 500
                         },
                         geometry: {
                             type: 'Point',
@@ -79,7 +79,7 @@ module.exports = function (center, time, resolution, network, done) {
                 getNext(i);
             });
         } else {
-            var line = isolines(destinations, 'eta', resolution * 1.2, [400]);
+            var line = isolines(destinations, 'eta', resolution, [time]);
             return done(null, line);
         }
     }

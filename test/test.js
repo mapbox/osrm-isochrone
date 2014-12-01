@@ -4,7 +4,7 @@ var test = require('tape'),
 
 test('osrm-isochrone', function(t) {
     var resolution = 35;
-    var time = 5;
+    var time = 300; // 5 minute drivetime
     var network = '../dc.osrm'
     var locations = [
         [-77.02926635742188,38.90011780426885]
