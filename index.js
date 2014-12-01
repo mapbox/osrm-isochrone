@@ -14,7 +14,7 @@ module.exports = function (center, time, resolution, network, done) {
     // this will account for a driver going a bit above the max safe speed
     var centerPt = point(center[0], center[1]);
     var spokes = featureCollection([])
-    var miles = (time/60) * 1.1;
+    var miles = (time/60) * 1.2; // assume 70mph max speed
     spokes.features.push(destination(centerPt, miles, 180, 'miles'));
     spokes.features.push(destination(centerPt, miles, 0, 'miles'));
     spokes.features.push(destination(centerPt, miles, 90, 'miles'));
