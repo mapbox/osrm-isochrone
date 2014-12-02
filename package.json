@@ -1,6 +1,6 @@
 {
   "name": "osrm-isochrone",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "creates drivetime isochrones from osrm routes",
   "main": "index.js",
   "scripts": {
