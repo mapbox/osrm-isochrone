@@ -1,5 +1,6 @@
 osrm-isochrone
 ---
+**Warning: this is experimental**
 
 Generate drivetime [isochrones](http://en.wikipedia.org/wiki/Isochrone_map) from [OpenStreetMap](http://www.openstreetmap.org/) data using [OSRM](http://project-osrm.org/).
 
