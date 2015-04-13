@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "osrm": "^4.4.0-final",
+    "polyline": "0.0.3",
     "turf-destination": "0.0.5",
     "turf-extent": "^0.1.4",
     "turf-featurecollection": "^0.1.0",
