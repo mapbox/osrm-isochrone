@@ -8,7 +8,7 @@ var isolines = require('turf-isolines'),
     OSRM = require('osrm');
 
 module.exports = function (center, time, resolution, network, done) {
-    var osrm = new OSRM(network);
+    var osrm = network instanceof OSRM ? network : new OSRM(network);
     // compute bbox
     // bbox should go out 1.4 miles in each direction for each minute
     // this will account for a driver going a bit above the max safe speed

@@ -38,3 +38,5 @@ isochrone(location, time, resolution, network, function(err, drivetime) {
   console.log(JSON.stringify(drivetime))
 });
 ```
+
+Alternativaly the `network` parameter can be an [OSRM](https://github.com/Project-OSRM/node-osrm) module instance. Allowing setup an OSRM with custom paramters, e.g. usage of shared-memory.
