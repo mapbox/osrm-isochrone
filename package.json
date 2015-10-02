@@ -34,6 +34,7 @@
     "turf-grid": "^0.1.0",
     "turf-isolines": "^0.1.1",
     "turf-point": "^0.1.6",
-    "turf-quantile": "^0.1.1"
+    "turf-quantile": "^0.1.1",
+    "turf-distance": "^0.1.1"
   }
 }
