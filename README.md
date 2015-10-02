@@ -29,10 +29,12 @@ var isochrone = require('osrm-isochrone');
 
 var resolution = 25; // sample resolution
 var time = 300; // 300 second drivetime (5 minutes)
+var maxspeed = '70'; // in 'unit'/hour
+var unit = 'miles'; // 'miles' or 'kilometers'
 var network = './dc.osrm' // prebuild dc osrm network file
 var location = [-77.02926635742188,38.90011780426885]; // center point
 
-isochrone(location, time, resolution, network, function(err, drivetime) {
+isochrone(location, time, resolution, maxspeed, unit, network, function(err, drivetime) {
   if(err) throw err;
   // a geojson linestring
   console.log(JSON.stringify(drivetime))

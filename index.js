@@ -7,18 +7,18 @@ var isolines = require('turf-isolines'),
     polylineDecode = require('polyline').decode,
     OSRM = require('osrm');
 
-module.exports = function (center, time, resolution, network, done) {
+module.exports = function (center, time, resolution, maxspeed, unit, network, done) {
     var osrm = network instanceof OSRM ? network : new OSRM(network);
     // compute bbox
     // bbox should go out 1.4 miles in each direction for each minute
     // this will account for a driver going a bit above the max safe speed
     var centerPt = point(center[0], center[1]);
     var spokes = featureCollection([]);
-    var miles = (time/60) * 1.2; // assume 70mph max speed
-    spokes.features.push(destination(centerPt, miles, 180, 'miles'));
-    spokes.features.push(destination(centerPt, miles, 0, 'miles'));
-    spokes.features.push(destination(centerPt, miles, 90, 'miles'));
-    spokes.features.push(destination(centerPt, miles, -90, 'miles'));
+    var length = (time/3600) * maxspeed;
+    spokes.features.push(destination(centerPt, length, 180, unit));
+    spokes.features.push(destination(centerPt, length, 0, unit));
+    spokes.features.push(destination(centerPt, length, 90, unit));
+    spokes.features.push(destination(centerPt, length, -90, unit));
     var bbox = extent(spokes);
 
     //compute destination grid
