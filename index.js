@@ -58,7 +58,9 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
                                 [
                                   targets.features[i].geometry.coordinates[1], targets.features[i].geometry.coordinates[0]
                                 ]
-                            ]
+                            ],
+                            alternateRoute: false,
+                            printInstructions: false
                         };
                     
                         osrm.route(query, function(err, res){
