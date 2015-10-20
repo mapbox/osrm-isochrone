@@ -29,6 +29,9 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
 
         //compute destination grid
         var targets = grid(bbox, resolution);
+        targets.features = targets.features.filter(function(feat) {
+            return distance(point(feat.geometry.coordinates[0], feat.geometry.coordinates[1]), centerPt, unit) <= length;
+        });
         var destinations = featureCollection([]);
         var i = 0;
         var routedNum = 0;
@@ -36,7 +39,7 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
         getNext(i);
 
         function getNext(i){
-            if(destinations.length >= targets.length){
+            if(destinations.features.length > targets.features.length){
                 return;
             }
             if(i < targets.features.length) {
