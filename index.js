@@ -8,10 +8,14 @@ var isolines = require('turf-isolines'),
     polylineDecode = require('polyline').decode,
     OSRM = require('osrm');
 
-module.exports = function (center, time, resolution, maxspeed, unit, network, done) {
-    this.draw = function(destinations) {
-        return isolines(destinations, 'eta', resolution, [time]);
-    };
+module.exports = function (center, time, resolution, maxspeed, unit, network, done, options) {
+    if (options && options.draw) {
+        this.draw = options.draw;
+    } else {
+        this.draw = function(destinations) {
+            return isolines(destinations, 'eta', resolution, [time]);
+        };
+    }
     this.getIsochrone = function() {
         var osrm = network instanceof OSRM ? network : new OSRM(network);
         // compute bbox
