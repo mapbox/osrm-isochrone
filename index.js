@@ -77,7 +77,7 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
                             }
                         });
                     } else {
-                        var distanceMapped = 0;
+                        var distanceMapped = undefined;
                         if (res.via_points) {
                             distanceMapped = distance(
                                 point(query.coordinates[1][1], query.coordinates[1][0]),
@@ -85,7 +85,7 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
                                 unit
                             );
                         }
-                        if (distanceMapped && distanceMapped < sizeCellGrid) {
+                        if (distanceMapped !== undefined && distanceMapped < sizeCellGrid) {
                             destinations.features.push({
                                 type: 'Feature',
                                 properties: {
