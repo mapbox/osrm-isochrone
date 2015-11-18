@@ -37,70 +37,43 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
             return distance(point(feat.geometry.coordinates[0], feat.geometry.coordinates[1]), centerPt, unit) <= length;
         });
         var destinations = featureCollection([]);
-        var i = 0;
-        var routedNum = 0;
 
-        getNext(i);
+        var coord = targets.features.map(function(feat) {
+            return [feat.geometry.coordinates[1], feat.geometry.coordinates[0]]
+        });
+        osrm.table({
+                coordinates: coord,
+                sources: [[center[1], center[0]]],
+                mappedPoints: true
+            }, function(err, res) {
+                if (err) {
+                    console.log(err);
+                    return done(err);
+                }
+                if (res.distance_table &&
+                    res.distance_table[0] && res.target_mapped_coordinates &&
+                    res.distance_table[0].length == res.target_mapped_coordinates.length) {
 
-        function getNext(i){
-            if(destinations.features.length > targets.features.length){
-                return;
-            }
-            if(i < targets.features.length) {
-                var query = {
-                    coordinates: [
-                        [
-                          center[1], center[0]
-                        ],
-                        [
-                          targets.features[i].geometry.coordinates[1], targets.features[i].geometry.coordinates[0]
-                        ]
-                    ],
-                    alternateRoute: false,
-                    printInstructions: false
-                };
-            
-                osrm.route(query, function(err, res){
-                    i++;
-                    if(err) console.log(err);
-                    if(err) return done(err);
-                    else if (!res || !res.route_summary) {
-                        destinations.features.push({
-                            type: 'Feature',
-                            properties: {
-                                eta: time+100
-                                //,dist: 500
-                            },
-                            geometry: {
-                                type: 'Point',
-                                coordinates: [query.coordinates[1][1], query.coordinates[1][0]]
-                            }
-                        });
-                    } else {
-                        var distanceMapped = undefined;
-                        if (res.via_points) {
-                            distanceMapped = distance(
-                                point(query.coordinates[1][1], query.coordinates[1][0]),
-                                point(res.via_points[1][1], res.via_points[1][0]),
-                                unit
-                            );
-                        }
-                        if (distanceMapped !== undefined && distanceMapped < sizeCellGrid) {
+                    res.distance_table[0].forEach(function(time, idx) {
+                        var distanceMapped = distance(
+                            point(coord[idx][1], coord[idx][0]),
+                            point(res.target_mapped_coordinates[idx][1], res.target_mapped_coordinates[idx][0]),
+                            unit
+                        );
+                        if (distanceMapped < sizeCellGrid) {
                             destinations.features.push({
                                 type: 'Feature',
                                 properties: {
-                                    eta: res.route_summary.total_time,
-                                    dist: res.route_summary.total_distance
+                                    eta: time / 10
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [res.via_points[1][1], res.via_points[1][0]]
+                                    coordinates: [res.target_mapped_coordinates[idx][1], res.target_mapped_coordinates[idx][0]]
                                 }
                             });
                         }
+                        // specific for isoline algorithm: exclude some points from grid
                         else {
-                            // exclude some points from grid for isoline
-                            if (!distanceMapped) distanceMapped = sizeCellGrid * 2;
                             destinations.features.push({
                                 type: 'Feature',
                                 properties: {
@@ -109,18 +82,16 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [query.coordinates[1][1], query.coordinates[1][0]]
+                                    coordinates: [coord[idx][1], coord[idx][0]]
                                 }
                             });
                         }
-                    }
-                    getNext(i);
-                });
-            } else {
+                    });
+                }
                 var result = self.draw(destinations);
                 return done(null, result);
             }
-        }
+        );
     };
     var self = this;
 
