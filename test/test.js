@@ -3,21 +3,19 @@ var test = require('tape'),
     isochrone = require('../');
 
 test('osrm-isochrone', function(t) {
-    var resolution = 35;
-    var time = 300; // 5 minute drivetime
-    var maxspeed = 70;
-    var unit = 'miles';
-    var network = '../dc.osrm'
-    var locations = [
-        [-77.02926635742188,38.90011780426885]
-    ];
+    var options = {
+      resolution: 25, // sample resolution
+      maxspeed: 70, // in 'unit'/hour
+      unit: 'miles', // 'miles' or 'kilometers'
+      network: 'test/data/berlin-latest.osrm' // prebuild dc osrm network file
+    }
+    var center = [52.517037,13.388860]; // center point
+    var time = 300; // 300 second drivetime (5 minutes)
 
-    locations.forEach(function(location) {
-        isochrone(location, time, resolution, maxspeed, unit, network, function(err, drivetime) {
-            if(err) throw err;
-            t.ok(drivetime);
-            console.log(JSON.stringify(drivetime))
-            t.end()
-        });
+    t.plan(2);
+
+    isochrone(center, time, options, function(err, drivetime) {
+      t.error(err, "Could not compute isochrone");
+      t.ok(drivetime);
     });
 });

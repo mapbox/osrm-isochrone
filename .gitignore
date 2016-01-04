@@ -19,6 +19,11 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
+test/data/berlin-latest*
+test/data/car.lua
+test/data/lib/access.lua
+stxxl.errlog
+
 # Dependency directory
 # Commenting this out is preferred by some people, see
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
