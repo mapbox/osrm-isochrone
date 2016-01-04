@@ -42,22 +42,21 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
             return [feat.geometry.coordinates[1], feat.geometry.coordinates[0]]
         });
         osrm.table({
-                coordinates: coord,
-                sources: [[center[1], center[0]]],
-                mappedPoints: true
+                destinations: coord,
+                sources: [[center[1], center[0]]]
             }, function(err, res) {
                 if (err) {
                     console.log(err);
                     return done(err);
                 }
                 if (res.distance_table &&
-                    res.distance_table[0] && res.target_mapped_coordinates &&
-                    res.distance_table[0].length == res.target_mapped_coordinates.length) {
+                    res.distance_table[0] && res.destination_coordinates &&
+                    res.distance_table[0].length == res.destination_coordinates.length) {
 
                     res.distance_table[0].forEach(function(time, idx) {
                         var distanceMapped = distance(
                             point(coord[idx][1], coord[idx][0]),
-                            point(res.target_mapped_coordinates[idx][1], res.target_mapped_coordinates[idx][0]),
+                            point(res.destination_coordinates[idx][1], res.destination_coordinates[idx][0]),
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
@@ -68,7 +67,7 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [res.target_mapped_coordinates[idx][1], res.target_mapped_coordinates[idx][0]]
+                                    coordinates: [res.destination_coordinates[idx][1], res.destination_coordinates[idx][0]]
                                 }
                             });
                         }

@@ -26,7 +26,7 @@
     "tape": "^3.0.3"
   },
   "dependencies": {
-    "osrm": "Mapotempo/node-osrm#456d34e3df4dfd70738f8f9cac28dfac13c035d6",
+    "osrm": ">=4.9.0",
     "polyline": "0.0.3",
     "turf-destination": "0.0.5",
     "turf-extent": "^0.1.4",
