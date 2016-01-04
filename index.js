@@ -2,105 +2,104 @@ var isolines = require('turf-isolines'),
     grid = require('turf-grid'),
     destination = require('turf-destination'),
     point = require('turf-point'),
+    distance = require('turf-distance'),
     extent = require('turf-extent'),
     featureCollection = require('turf-featurecollection'),
     polylineDecode = require('polyline').decode,
     OSRM = require('osrm');
 
-module.exports = function (center, time, resolution, network, done) {
-    var osrm = network instanceof OSRM ? network : new OSRM(network);
-    // compute bbox
-    // bbox should go out 1.4 miles in each direction for each minute
-    // this will account for a driver going a bit above the max safe speed
-    var centerPt = point(center[0], center[1]);
-    var spokes = featureCollection([])
-    var miles = (time/60) * 1.2; // assume 70mph max speed
-    spokes.features.push(destination(centerPt, miles, 180, 'miles'));
-    spokes.features.push(destination(centerPt, miles, 0, 'miles'));
-    spokes.features.push(destination(centerPt, miles, 90, 'miles'));
-    spokes.features.push(destination(centerPt, miles, -90, 'miles'));
-    var bbox = extent(spokes);
+module.exports = function (center, time, options, done) {
+    if (!options) throw 'options is mandatory';
+    if (!options.resolution) throw 'resolution is mandatory in options';
+    if (!options.network) throw 'network is mandatory in options';
+    if (!options.maxspeed) throw 'maxspeed is mandatory in options';
+    var unit = options.unit || 'miles';
+    if (options && options.draw) {
+        this.draw = options.draw;
+    } else {
+        this.draw = function(destinations) {
+            return isolines(destinations, 'eta', options.resolution, [time]);
+        };
+    }
+    this.getIsochrone = function() {
+        var osrm = options.network instanceof OSRM ? options.network : new OSRM(options.network);
+        // compute bbox
+        // bbox should go out 1.4 miles in each direction for each minute
+        // this will account for a driver going a bit above the max safe speed
+        var centerPt = point(center[0], center[1]);
+        var spokes = featureCollection([]);
+        var length = (time/3600) * options.maxspeed;
+        spokes.features.push(destination(centerPt, length, 180, unit));
+        spokes.features.push(destination(centerPt, length, 0, unit));
+        spokes.features.push(destination(centerPt, length, 90, unit));
+        spokes.features.push(destination(centerPt, length, -90, unit));
+        var bbox = this.bbox = extent(spokes);
+        var sizeCellGrid = this.sizeCellGrid = distance(point(bbox[0], bbox[1]), point(bbox[0], bbox[3]), unit) / options.resolution;
 
-    //compute destination grid
-    var targets = grid(bbox, resolution);
-    var routes = featureCollection([]);
-    var destinations = featureCollection([]);
-    var i = 0;
-    var routedNum = 0;
+        //compute destination grid
+        var targets = grid(bbox, options.resolution);
+        targets.features = targets.features.filter(function(feat) {
+            return distance(point(feat.geometry.coordinates[0], feat.geometry.coordinates[1]), centerPt, unit) <= length;
+        });
+        var destinations = featureCollection([]);
 
-    getNext(i);
+        var coord = targets.features.map(function(feat) {
+            return [feat.geometry.coordinates[1], feat.geometry.coordinates[0]]
+        });
+        osrm.table({
+                destinations: coord,
+                sources: [[center[1], center[0]]]
+            }, function(err, res) {
+                if (err) {
+                    console.log(err);
+                    return done(err);
+                }
+                if (res.distance_table &&
+                    res.distance_table[0] && res.destination_coordinates &&
+                    res.distance_table[0].length == res.destination_coordinates.length) {
 
-    function getNext(i){
-        if(destinations.length >= targets.length){
-            return
-        }
-        if(i < targets.features.length) {
-            var query = {
-                coordinates: [
-                    [
-                      center[1], center[0]
-                    ],
-                    [
-                      targets.features[i].geometry.coordinates[1], targets.features[i].geometry.coordinates[0]
-                    ]
-                ]
-            };
-        
-            osrm.route(query, function(err, res){
-                i++;
-                if(err) console.log(err)
-                if(err) return done(err)
-                else if (!res || !res.route_summary) {
-                    destinations.features.push({
-                        type: 'Feature',
-                        properties: {
-                            eta: time+100
-                            //,dist: 500
-                        },
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [query.coordinates[1][1], query.coordinates[1][0]]
+                    res.distance_table[0].forEach(function(time, idx) {
+                        var distanceMapped = distance(
+                            point(coord[idx][1], coord[idx][0]),
+                            point(res.destination_coordinates[idx][1], res.destination_coordinates[idx][0]),
+                            unit
+                        );
+                        if (distanceMapped < sizeCellGrid) {
+                            destinations.features.push({
+                                type: 'Feature',
+                                properties: {
+                                    eta: time / 10
+                                },
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: [res.destination_coordinates[idx][1], res.destination_coordinates[idx][0]]
+                                }
+                            });
+                        }
+                        // specific for isoline algorithm: exclude some points from grid
+                        else {
+                            destinations.features.push({
+                                type: 'Feature',
+                                properties: {
+                                    // this point cannot be routed => a penality 2 is applied to maxspeed
+                                    eta: time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2
+                                },
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: [coord[idx][1], coord[idx][0]]
+                                }
+                            });
                         }
                     });
-                } else {
-                    destinations.features.push({
-                        type: 'Feature',
-                        properties: {
-                            eta: res.route_summary.total_time,
-                            dist: res.route_summary.total_distance
-                        },
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [res.via_points[1][1], res.via_points[1][0]]
-                        }
-                        });
-                    routes.features.push(decode(res));
                 }
-                getNext(i);
-            });
-        } else {
-            var line = isolines(destinations, 'eta', resolution, [time]);
-            return done(null, line);
-        }
-    }
-}
-
-function decode (res) {
-    var route = {
-        type: 'Feature',
-        geometry: {
-            type: 'LineString',
-            coordinates: polylineDecode(res.route_geometry)
-        },
-        properties: {
-            eta: res.route_summary.total_time,
-            dist: res.route_summary.total_distance
-        }
+                var result = self.draw(destinations);
+                return done(null, result);
+            }
+        );
     };
-    route.geometry.coordinates = route.geometry.coordinates.map(function(c){
-        var lon = c[1] * 0.1;
-        var lat = c[0] * 0.1;
-        return [lon, lat];
-    });
-    return route;
+    var self = this;
+
+    // in case module is called directly
+    if (this.process && this.process.title == 'node')
+        return getIsochrone();
 }
