@@ -8,31 +8,36 @@ var isolines = require('turf-isolines'),
     polylineDecode = require('polyline').decode,
     OSRM = require('osrm');
 
-module.exports = function (center, time, resolution, maxspeed, unit, network, done, options) {
+module.exports = function (center, time, options, done) {
+    if (!options) throw 'options is mandatory';
+    if (!options.resolution) throw 'resolution is mandatory in options';
+    if (!options.network) throw 'network is mandatory in options';
+    if (!options.maxspeed) throw 'maxspeed is mandatory in options';
+    var unit = options.unit || 'miles';
     if (options && options.draw) {
         this.draw = options.draw;
     } else {
         this.draw = function(destinations) {
-            return isolines(destinations, 'eta', resolution, [time]);
+            return isolines(destinations, 'eta', options.resolution, [time]);
         };
     }
     this.getIsochrone = function() {
-        var osrm = network instanceof OSRM ? network : new OSRM(network);
+        var osrm = options.network instanceof OSRM ? options.network : new OSRM(options.network);
         // compute bbox
         // bbox should go out 1.4 miles in each direction for each minute
         // this will account for a driver going a bit above the max safe speed
         var centerPt = point(center[0], center[1]);
         var spokes = featureCollection([]);
-        var length = (time/3600) * maxspeed;
+        var length = (time/3600) * options.maxspeed;
         spokes.features.push(destination(centerPt, length, 180, unit));
         spokes.features.push(destination(centerPt, length, 0, unit));
         spokes.features.push(destination(centerPt, length, 90, unit));
         spokes.features.push(destination(centerPt, length, -90, unit));
         var bbox = this.bbox = extent(spokes);
-        var sizeCellGrid = this.sizeCellGrid = distance(point(bbox[0], bbox[1]), point(bbox[0], bbox[3]), unit) / resolution;
+        var sizeCellGrid = this.sizeCellGrid = distance(point(bbox[0], bbox[1]), point(bbox[0], bbox[3]), unit) / options.resolution;
 
         //compute destination grid
-        var targets = grid(bbox, resolution);
+        var targets = grid(bbox, options.resolution);
         targets.features = targets.features.filter(function(feat) {
             return distance(point(feat.geometry.coordinates[0], feat.geometry.coordinates[1]), centerPt, unit) <= length;
         });
@@ -77,7 +82,7 @@ module.exports = function (center, time, resolution, maxspeed, unit, network, do
                                 type: 'Feature',
                                 properties: {
                                     // this point cannot be routed => a penality 2 is applied to maxspeed
-                                    eta: time + (distanceMapped - sizeCellGrid) / (maxspeed / 3600) * 2
+                                    eta: time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2
                                 },
                                 geometry: {
                                     type: 'Point',

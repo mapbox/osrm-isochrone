@@ -27,14 +27,16 @@ An osrm file is required for routing. This can be generated using included binar
 ```js
 var isochrone = require('osrm-isochrone');
 
-var resolution = 25; // sample resolution
 var time = 300; // 300 second drivetime (5 minutes)
-var maxspeed = '70'; // in 'unit'/hour
-var unit = 'miles'; // 'miles' or 'kilometers'
-var network = './dc.osrm' // prebuild dc osrm network file
 var location = [-77.02926635742188,38.90011780426885]; // center point
+var options = {
+  resolution: 25, // sample resolution
+  maxspeed: 70, // in 'unit'/hour
+  unit: 'miles', // 'miles' or 'kilometers'
+  network: './dc.osrm' // prebuild dc osrm network file
+}
 
-isochrone(location, time, resolution, maxspeed, unit, network, function(err, drivetime) {
+isochrone(location, time, options, function(err, drivetime) {
   if(err) throw err;
   // a geojson linestring
   console.log(JSON.stringify(drivetime))
@@ -49,14 +51,16 @@ You can too define your own function to draw line/polygon instead of default:
 var concave = require('turf-concave');
 var Isochrone = require('osrm-isochrone');
 
-var resolution = 25; // sample resolution
 var time = 300; // 300 second drivetime (5 minutes)
-var maxspeed = '70'; // in 'unit'/hour
-var unit = 'miles'; // 'miles' or 'kilometers'
-var network = './dc.osrm' // prebuild dc osrm network file
 var location = [-77.02926635742188,38.90011780426885]; // center point
+var options = {
+  resolution: 25, // sample resolution
+  maxspeed: 70, // in 'unit'/hour
+  unit: 'miles', // 'miles' or 'kilometers'
+  network: './dc.osrm' // prebuild dc osrm network file
+}
 
-var isochrone = new Isochrone(location, time, resolution, maxspeed, unit, network, function(err, drivetime) {
+var isochrone = new Isochrone(location, time, options, function(err, drivetime) {
   if(err) throw err;
   // your geojson from draw overload
   console.log(JSON.stringify(drivetime))
