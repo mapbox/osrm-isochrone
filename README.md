@@ -2,6 +2,8 @@ osrm-isochrone
 ---
 **Warning: this is experimental**
 
+[![Build Status](https://travis-ci.org/mapbox/osrm-isochrone.svg)](https://travis-ci.org/mapbox/osrm-isochrone)
+
 Generate drivetime [isochrones](http://en.wikipedia.org/wiki/Isochrone_map) from [OpenStreetMap](http://www.openstreetmap.org/) data using [OSRM](http://project-osrm.org/).
 
 ![](https://dl.dropbox.com/s/r7hntimgiv5cfeq/Screenshot%202014-11-24%2017.20.32.png?dl=0)
