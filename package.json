@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/morganherlocker/osrm-isochrone.git"
+    "url": "https://github.com/mapbox/osrm-isochrone.git"
   },
   "keywords": [
     "drivetime",
@@ -18,9 +18,9 @@
   "author": "morganherlocker",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/morganherlocker/osrm-isochrone/issues"
+    "url": "https://github.com/mapbox/osrm-isochrone/issues"
   },
-  "homepage": "https://github.com/morganherlocker/osrm-isochrone",
+  "homepage": "https://github.com/mapbox/osrm-isochrone",
   "devDependencies": {
     "geojson-area": "^0.1.0",
     "tape": "^3.0.3"
