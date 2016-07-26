@@ -74,14 +74,14 @@ module.exports = function (center, time, options, done) {
                         );
                         if (distanceMapped < sizeCellGrid) {
                             var dest = point(res.destinations[idx].location[0], res.destinations[idx].location[1]);
-                            dest.properties = {}
+                            dest.properties = {};
                             dest.properties.eta = time / 10;
                             destinations.features.push(dest);
                         }
                         // specific for isoline algorithm: exclude some points from grid
                         else {
                             var dest = point(coord[idx][0], coord[idx][1]);
-                            dest.properties = {}
+                            dest.properties = {};
                             dest.properties.eta = time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2;
                             destinations.features.push(dest);
                         }
