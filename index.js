@@ -59,14 +59,15 @@ module.exports = function (center, time, options, done) {
                     console.log(err);
                     return done(err);
                 }
-                if (res.distance_table &&
-                    res.distance_table[0] && res.destination_coordinates &&
-                    res.distance_table[0].length == res.destination_coordinates.length) {
+                console.log(res.durations);
+                if (res.durations &&
+                    res.durations[0] && res.destinations &&
+                    res.durations[0].length == res.destinations.length) {
 
-                    res.distance_table[0].forEach(function(time, idx) {
+                    res.durations[0].forEach(function(time, idx) {
                         var distanceMapped = distance(
                             point(coord[idx][1], coord[idx][0]),
-                            point(res.destination_coordinates[idx][1], res.destination_coordinates[idx][0]),
+                            point(res.destinations[idx][1], res.destinations[idx][0]),
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
@@ -77,7 +78,7 @@ module.exports = function (center, time, options, done) {
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [res.destination_coordinates[idx][1], res.destination_coordinates[idx][0]]
+                                    coordinates: [res.destinations[idx][1], res.destinations[idx][0]]
                                 }
                             });
                         }
