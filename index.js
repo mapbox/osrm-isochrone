@@ -44,7 +44,7 @@ module.exports = function (center, time, options, done) {
         var destinations = featureCollection([]);
 
         var coord = targets.features.map(function(feat) {
-            return [feat.geometry.coordinates[1], feat.geometry.coordinates[0]]
+            return [feat.geometry.coordinates[0], feat.geometry.coordinates[1]]
         });
         coord.push([center[0], center[1]]);
         var sources = coord.length - 1;
