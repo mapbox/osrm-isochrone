@@ -65,6 +65,7 @@ module.exports = function (center, time, options, done) {
                     res.durations[0].length == res.destinations.length) {
 
                     res.durations[0].forEach(function(time, idx) {
+                        console.log([time, idx]);
                         var distanceMapped = distance(
                             point(coord[idx][0], coord[idx][1]),
                             point(res.destinations[idx][0], res.destinations[idx][1]),
