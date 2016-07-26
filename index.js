@@ -66,8 +66,8 @@ module.exports = function (center, time, options, done) {
 
                     res.durations[0].forEach(function(time, idx) {
                         var distanceMapped = distance(
-                            point(coord[idx][1], coord[idx][0]),
-                            point(res.destinations[idx][1], res.destinations[idx][0]),
+                            point(coord[idx][0], coord[idx][1]),
+                            point(res.destinations[idx][0], res.destinations[idx][1]),
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
@@ -78,7 +78,7 @@ module.exports = function (center, time, options, done) {
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [res.destinations[idx][1], res.destinations[idx][0]]
+                                    coordinates: [res.destinations[idx][0], res.destinations[idx][1]]
                                 }
                             });
                         }
@@ -92,7 +92,7 @@ module.exports = function (center, time, options, done) {
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [coord[idx][1], coord[idx][0]]
+                                    coordinates: [coord[idx][0], coord[idx][1]]
                                 }
                             });
                         }
