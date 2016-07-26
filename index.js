@@ -60,6 +60,7 @@ module.exports = function (center, time, options, done) {
                     return done(err);
                 }
                 console.log(res.durations);
+                console.log(res.destinations);
                 if (res.durations &&
                     res.durations[0] && res.destinations &&
                     res.durations[0].length == res.destinations.length) {
