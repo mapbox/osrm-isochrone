@@ -50,7 +50,7 @@ module.exports = function (center, time, options, done) {
         var sources = coord.length - 1;
         osrm.table({
                 coordinates: coord,
-                sources: sources;
+                sources: sources
             }, function(err, res) {
                 if (err) {
                     console.log(err);
