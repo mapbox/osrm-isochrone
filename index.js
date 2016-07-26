@@ -46,7 +46,7 @@ module.exports = function (center, time, options, done) {
         var coord = targets.features.map(function(feat) {
             return [feat.geometry.coordinates[1], feat.geometry.coordinates[0]]
         });
-        coord.push([center[1], center[0]]);
+        coord.push([center[0], center[1]]);
         var sources = coord.length - 1;
         osrm.table({
                 coordinates: coord,
