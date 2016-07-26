@@ -69,7 +69,7 @@ module.exports = function (center, time, options, done) {
                         console.log([time, idx]);
                         var distanceMapped = distance(
                             point(coord[idx][0], coord[idx][1]),
-                            point(res.destinations[idx][0], res.destinations[idx][1]),
+                            point(res.destinations[idx].location[0], res.destinations[idx].location[1]),
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
@@ -80,7 +80,7 @@ module.exports = function (center, time, options, done) {
                                 },
                                 geometry: {
                                     type: 'Point',
-                                    coordinates: [res.destinations[idx][0], res.destinations[idx][1]]
+                                    coordinates: [res.destinations[idx].location[0], res.destinations[idx].location[1]]
                                 }
                             });
                         }
