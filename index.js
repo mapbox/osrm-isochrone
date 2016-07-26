@@ -73,30 +73,17 @@ module.exports = function (center, time, options, done) {
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
-                            destinations.features.push({
-                                type: 'Feature',
-                                properties: {
-                                    eta: time / 10
-                                },
-                                geometry: {
-                                    type: 'Point',
-                                    coordinates: [res.destinations[idx].location[0], res.destinations[idx].location[1]]
-                                }
-                            });
+                            var dest = point(res.destinations[idx].location[0], res.destinations[idx].location[1]);
+                            dest.properties = {}
+                            dest.properties.eta = time / 10;
+                            destinations.features.push(dest);
                         }
                         // specific for isoline algorithm: exclude some points from grid
                         else {
-                            destinations.features.push({
-                                type: 'Feature',
-                                properties: {
-                                    // this point cannot be routed => a penality 2 is applied to maxspeed
-                                    eta: time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2
-                                },
-                                geometry: {
-                                    type: 'Point',
-                                    coordinates: [coord[idx][0], coord[idx][1]]
-                                }
-                            });
+                            var dest = point(coord[idx][0], coord[idx][1]);
+                            dest.properties = {}
+                            dest.properties.eta = time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2;
+                            destinations.features.push(dest);
                         }
                     });
                 }
