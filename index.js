@@ -18,7 +18,6 @@ module.exports = function (center, time, options, done) {
         this.draw = options.draw;
     } else {
         this.draw = function(destinations) {
-            console.log(destinations);
             return isolines(destinations, 'eta', options.resolution, [time]);
         };
     }
@@ -73,6 +72,7 @@ module.exports = function (center, time, options, done) {
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
+                            console.log([res.destinations[idx].location[0], res.destinations[idx].location[1]]);
                             var dest = point(res.destinations[idx].location[0], res.destinations[idx].location[1]);
                             dest.properties = {};
                             dest.properties.eta = time / 10;
@@ -80,6 +80,7 @@ module.exports = function (center, time, options, done) {
                         }
                         // specific for isoline algorithm: exclude some points from grid
                         else {
+                            console.log([coord[idx][0], coord[idx][1]]);
                             var dest = point(coord[idx][0], coord[idx][1]);
                             dest.properties = {};
                             dest.properties.eta = time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2;
