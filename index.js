@@ -47,9 +47,7 @@ module.exports = function (center, time, options, done) {
             return [feat.geometry.coordinates[0], feat.geometry.coordinates[1]]
         });
         coord.push([center[0], center[1]]);
-        console.log(coord);
         var sources = coord.length - 1;
-        console.log(sources);
         osrm.table({
                 coordinates: coord,
                 sources: [sources]
@@ -58,21 +56,17 @@ module.exports = function (center, time, options, done) {
                     console.log(err);
                     return done(err);
                 }
-                console.log(res.durations);
-                console.log(res.destinations);
                 if (res.durations &&
                     res.durations[0] && res.destinations &&
                     res.durations[0].length == res.destinations.length) {
                     res.durations[0].pop();
                     res.durations[0].forEach(function(t, idx) {
-                        // console.log([t, idx]);
                         var distanceMapped = distance(
                             point(coord[idx][0], coord[idx][1]),
                             point(res.destinations[idx].location[0], res.destinations[idx].location[1]),
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
-                            console.log([res.destinations[idx].location[0], res.destinations[idx].location[1], t]);
                             var dest = point(res.destinations[idx].location[0], res.destinations[idx].location[1]);
                             dest.properties = {};
                             dest.properties.eta = t / 10;
@@ -80,7 +74,6 @@ module.exports = function (center, time, options, done) {
                         }
                         // specific for isoline algorithm: exclude some points from grid
                         else {
-                            console.log([coord[idx][0], coord[idx][1], t]);
                             var dest = point(coord[idx][0], coord[idx][1]);
                             dest.properties = {};
                             dest.properties.eta = t + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2;
