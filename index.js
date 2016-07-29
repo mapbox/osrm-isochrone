@@ -64,26 +64,26 @@ module.exports = function (center, time, options, done) {
                     res.durations[0] && res.destinations &&
                     res.durations[0].length == res.destinations.length) {
                     res.durations[0].pop();
-                    res.durations[0].forEach(function(time, idx) {
-                        // console.log([time, idx]);
+                    res.durations[0].forEach(function(t, idx) {
+                        // console.log([t, idx]);
                         var distanceMapped = distance(
                             point(coord[idx][0], coord[idx][1]),
                             point(res.destinations[idx].location[0], res.destinations[idx].location[1]),
                             unit
                         );
                         if (distanceMapped < sizeCellGrid) {
-                            console.log([res.destinations[idx].location[0], res.destinations[idx].location[1]]);
+                            console.log([res.destinations[idx].location[0], res.destinations[idx].location[1], t]);
                             var dest = point(res.destinations[idx].location[0], res.destinations[idx].location[1]);
                             dest.properties = {};
-                            dest.properties.eta = time / 10;
+                            dest.properties.eta = t / 10;
                             destinations.features.push(dest);
                         }
                         // specific for isoline algorithm: exclude some points from grid
                         else {
-                            console.log([coord[idx][0], coord[idx][1]]);
+                            console.log([coord[idx][0], coord[idx][1], t]);
                             var dest = point(coord[idx][0], coord[idx][1]);
                             dest.properties = {};
-                            dest.properties.eta = time + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2;
+                            dest.properties.eta = t + (distanceMapped - sizeCellGrid) / (options.maxspeed / 3600) * 2;
                             destinations.features.push(dest);
                         }
                     });
