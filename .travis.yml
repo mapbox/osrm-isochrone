@@ -22,6 +22,7 @@ addons_default: &apt_packages
     packages: [ 'libstdc++-5-dev', 'zlib1g-dev', 'make', 'apport', 'gdb' ]
 
 script_default: &build_and_test
+    - make all
     - make test
 
 matrix:
