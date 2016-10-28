@@ -4,7 +4,7 @@ osrm-isochrone
 
 [![Build Status](https://travis-ci.org/mapbox/osrm-isochrone.svg)](https://travis-ci.org/mapbox/osrm-isochrone)
 
-Generate drivetime [isochrones](http://en.wikipedia.org/wiki/Isochrone_map) from [OpenStreetMap](http://www.openstreetmap.org/) data using [OSRM](http://project-osrm.org/).
+Generate drive-time [isochrones](http://en.wikipedia.org/wiki/Isochrone_map) from [OpenStreetMap](http://www.openstreetmap.org/) data using [OSRM](http://project-osrm.org/).
 
 ![](https://dl.dropbox.com/s/r7hntimgiv5cfeq/Screenshot%202014-11-24%2017.20.32.png?dl=0)
 
@@ -16,7 +16,7 @@ npm install osrm-isochrone
 ```
 
 ##Build
-An osrm file is required for routing. This can be generated using included binaries. (*Note: this will take a lot of processing power if you are planning to use the entire planet.osm file. More info [here](https://github.com/Project-OSRM/osrm-backend/wiki/Running-OSRM)*)
+An osrm file is required for routing. This can be generated using included binaries. (*Note: this will take a lot of processing power if you are planning to use the entire planet.osm file, for general use a regional OSM data extract is preferable. More info [here](https://github.com/Project-OSRM/osrm-backend/wiki/Running-OSRM)*)
 
 ```sh
 #first download an osm file containing the area you need
@@ -25,17 +25,18 @@ An osrm file is required for routing. This can be generated using included binar
 ```
 
 ##Usage
-
+Create a file containing something such as:
 ```js
 var isochrone = require('osrm-isochrone');
 
 var time = 300; // 300 second drivetime (5 minutes)
 var location = [-77.02926635742188,38.90011780426885]; // center point
+    // Note: coordinates are E/W , N/S
 var options = {
   resolution: 25, // sample resolution
   maxspeed: 70, // in 'unit'/hour
   unit: 'miles', // 'miles' or 'kilometers'
-  network: './dc.osrm' // prebuild dc osrm network file
+  network: './dc.osrm' // prebuilt dc osrm network file, or use the one just built.
 }
 
 isochrone(location, time, options, function(err, drivetime) {
@@ -44,8 +45,16 @@ isochrone(location, time, options, function(err, drivetime) {
   console.log(JSON.stringify(drivetime))
 });
 ```
+Run with
 
-Alternativaly the `network` parameter can be an [OSRM](https://github.com/Project-OSRM/node-osrm) module instance. Allowing setup an OSRM with custom paramters, e.g. usage of shared-memory.
+```sh
+node my-file.js
+```
+
+The output will be in GeoJSON format.
+
+###Advanced
+Alternatively the `network` parameter can be an [OSRM](https://github.com/Project-OSRM/node-osrm) module instance. Allowing setup an OSRM with custom parameters, e.g. usage of shared-memory.
 
 You can too define your own function to draw line/polygon instead of default:
 
@@ -76,3 +85,4 @@ isochrone.draw = function(destinations) {
 }
 isochrone.getIsochrone();
 ```
+

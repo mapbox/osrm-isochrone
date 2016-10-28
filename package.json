@@ -2,6 +2,7 @@
   "name": "osrm-isochrone",
   "version": "2.0.0",
   "description": "creates drivetime isochrones from osrm routes",
+  "osrm_release" : "5.4",
   "main": "index.js",
   "scripts": {
     "test": "node ./test/test.js"
@@ -26,15 +27,12 @@
     "tape": "^3.0.3"
   },
   "dependencies": {
-    "osrm": ">=4.9.0",
-    "polyline": "0.0.3",
-    "turf-destination": "0.0.5",
-    "turf-extent": "^0.1.4",
-    "turf-featurecollection": "^0.1.0",
-    "turf-grid": "^0.1.0",
-    "turf-isolines": "^0.1.1",
-    "turf-point": "^0.1.6",
-    "turf-quantile": "^0.1.1",
-    "turf-distance": "^0.1.1"
+    "osrm": "^5.4.1",
+    "@turf/helpers": "^3.5.2",
+    "@turf/isolines": "^3.5.2",
+    "@turf/destination": "^3.5.2",
+    "@turf/bbox": "^3.5.2",
+    "@turf/distance": "^3.5.2",
+    "@turf/point-grid": "^3.5.2"
   }
 }

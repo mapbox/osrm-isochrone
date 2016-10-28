@@ -9,7 +9,7 @@ test('osrm-isochrone', function(t) {
       unit: 'miles', // 'miles' or 'kilometers'
       network: 'test/data/berlin-latest.osrm' // prebuild dc osrm network file
     }
-    var center = [52.517037,13.388860]; // center point
+    var center = [13.388860,52.517037]; // center point
     var time = 300; // 300 second drivetime (5 minutes)
 
     t.plan(2);

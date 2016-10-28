@@ -1,4 +1,5 @@
 #http://www.gnu.org/prep/standards/html_node/Standard-Targets.html#Standard-Targets
+
 TOOL_ROOT?=$(shell pwd)/node_modules/osrm/lib/binding
 OSRM_DATASTORE:=$(TOOL_ROOT)/osrm-datastore
 export TOOL_ROOT
@@ -19,3 +20,5 @@ test: shm
 	npm test
 
 .PHONY: test clean shm
+
+
