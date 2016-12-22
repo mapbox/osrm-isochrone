@@ -1,8 +1,8 @@
 {
-  "name": "osrm-isochrone",
+  "name": "@mapbox/osrm-isochrone",
   "version": "2.0.0",
   "description": "creates drivetime isochrones from osrm routes",
-  "osrm_release" : "5.4",
+  "osrm_release": "5.4",
   "main": "index.js",
   "scripts": {
     "test": "node ./test/test.js"
